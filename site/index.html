@@ -1,10 +1,1555 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Barış Derelioglu — Portfolyo" />
   <title>Barış Derelioglu</title>
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES
+    ============================================= */
+    :root {
+      --bg:           #161718;
+      --bg-2:         #1c1d1e;
+      --bg-3:         #222324;
+      --anthracite:   #2e3032;
+      --anthracite-2: #3a3d40;
+      --petrol:       #3d6b5a;
+      --petrol-light: #4e8a72;
+      --petrol-dim:   rgba(61, 107, 90, 0.12);
+      --petrol-line:  rgba(61, 107, 90, 0.4);
+      --white:        #f2f0ec;
+      --white-2:      #c8c5bf;
+      --muted:        #7a7872;
+      --muted-2:      #4a4845;
+      --line:         rgba(242, 240, 236, 0.08);
+      --line-2:       rgba(242, 240, 236, 0.04);
+      --font:         Helvetica, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono:    'Courier New', Courier, monospace;
+      --ease:         cubic-bezier(0.19, 1, 0.22, 1);
+      --t:            0.4s;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--petrol); color: var(--white); }
+
+    a { color: inherit; text-decoration: none; }
+
+    ::-webkit-scrollbar { width: 1px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--petrol); }
+
+    /* =============================================
+       UTILITY
+    ============================================= */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .section { padding: 120px 0; }
+
+    .line-h {
+      width: 100%;
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 24px 0;
+      transition: background var(--t) var(--ease), padding var(--t) var(--ease);
+    }
+
+    #navbar.scrolled {
+      background: rgba(22, 23, 24, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .nav-logo em {
+      font-style: normal;
+      color: var(--petrol-light);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color var(--t);
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-status {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--petrol-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--petrol-light);
+      display: block;
+      animation: pulse 2.5s infinite;
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px; height: 1px;
+      background: var(--white);
+      transition: var(--t) var(--ease);
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile {
+      display: none;
+      position: fixed; inset: 0; z-index: 99;
+      background: var(--bg);
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 48px;
+      gap: 12px;
+    }
+
+    .nav-mobile.open { display: flex; }
+
+    .nav-mobile a {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--muted-2);
+      transition: color var(--t);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+    }
+
+    .nav-mobile a:hover { color: var(--white); }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding-top: 80px;
+      position: relative;
+    }
+
+    .hero-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 80px;
+    }
+
+    .hero-index {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--petrol-light);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      animation: fadeIn 1s 0.2s var(--ease) forwards;
+    }
+
+    .hero-index::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      max-width: 120px;
+    }
+
+    .hero-name {
+      font-size: clamp(4rem, 10vw, 9.5rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeIn 1s 0.35s var(--ease) forwards;
+    }
+
+    .hero-name .surname {
+      display: block;
+      color: var(--muted);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--line);
+      opacity: 0;
+      animation: fadeIn 1s 0.55s var(--ease) forwards;
+    }
+
+    .meta-cell {
+      padding: 28px 0;
+      border-right: 1px solid var(--line);
+      padding-right: 40px;
+    }
+
+    .meta-cell:first-child { padding-left: 0; }
+    .meta-cell:last-child { border-right: none; padding-left: 40px; padding-right: 0; }
+    .meta-cell:nth-child(2) { padding-left: 40px; }
+
+    .meta-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .meta-value {
+      font-size: 0.9rem;
+      color: var(--white-2);
+      font-weight: 400;
+    }
+
+    .meta-value.accent { color: var(--petrol-light); }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding-top: 40px;
+      opacity: 0;
+      animation: fadeIn 1s 0.7s var(--ease) forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.75rem;
+      font-family: var(--font);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--t) var(--ease);
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .btn-primary {
+      background: var(--petrol);
+      color: var(--white);
+      padding: 16px 32px;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: var(--petrol-light);
+    }
+
+    .btn-ghost {
+      color: var(--muted);
+      border-bottom: 1px solid var(--muted-2);
+      padding-bottom: 2px;
+    }
+
+    .btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+    .hero-scroll-line {
+      position: absolute;
+      right: 48px;
+      bottom: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    .hero-scroll-line::after {
+      content: '';
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: lineGrow 2s 1.5s var(--ease) forwards;
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+
+    /* =============================================
+       ABOUT
+    ============================================= */
+    #about { background: var(--bg-2); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: start;
+    }
+
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow-num {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--petrol-light);
+      letter-spacing: 0.1em;
+    }
+
+    .eyebrow-line {
+      width: 40px;
+      height: 1px;
+      background: var(--petrol);
+    }
+
+    .eyebrow-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-heading {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 40px;
+    }
+
+    .about-body p {
+      font-size: 0.95rem;
+      color: var(--white-2);
+      margin-bottom: 24px;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .about-body p:last-of-type { margin-bottom: 40px; }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .about-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      transition: all var(--t);
+    }
+
+    .about-tag:hover {
+      border-color: var(--petrol-line);
+      color: var(--petrol-light);
+    }
+
+    /* Exhibition-style photo frame */
+    .about-visual {
+      position: relative;
+    }
+
+    .photo-frame {
+      position: relative;
+      aspect-ratio: 3/4;
+      background: var(--anthracite);
+      overflow: hidden;
+    }
+
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, var(--petrol-dim) 0%, transparent 50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .photo-placeholder-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* Abstract economy/software visual */
+    .photo-graphic {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-graphic svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .frame-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(22,23,24,0.85);
+      backdrop-filter: blur(8px);
+      padding: 20px 24px;
+      border-top: 1px solid var(--line);
+      z-index: 2;
+    }
+
+    .frame-label-title {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .frame-label-value {
+      font-size: 0.85rem;
+      color: var(--white-2);
+    }
+
+    .corner-mark {
+      position: absolute;
+      width: 20px; height: 20px;
+    }
+
+    .corner-mark.tl { top: -1px; left: -1px; border-top: 1px solid var(--petrol); border-left: 1px solid var(--petrol); }
+    .corner-mark.tr { top: -1px; right: -1px; border-top: 1px solid var(--petrol); border-right: 1px solid var(--petrol); }
+    .corner-mark.bl { bottom: -1px; left: -1px; border-bottom: 1px solid var(--petrol); border-left: 1px solid var(--petrol); }
+    .corner-mark.br { bottom: -1px; right: -1px; border-bottom: 1px solid var(--petrol); border-right: 1px solid var(--petrol); }
+
+    .about-numbers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 32px;
+      border: 1px solid var(--line);
+    }
+
+    .about-num-cell {
+      padding: 28px 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      transition: background var(--t);
+    }
+
+    .about-num-cell:nth-child(2) { border-right: none; }
+    .about-num-cell:nth-child(3) { border-bottom: none; }
+    .about-num-cell:nth-child(4) { border-right: none; border-bottom: none; }
+    .about-num-cell:hover { background: var(--bg-3); }
+
+    .num-big {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--petrol-light);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .num-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* =============================================
+       SKILLS
+    ============================================= */
+    #about,
+    #skills,
+    #projects,
+    #contact {
+      scroll-margin-top: 120px;
+    }
+
+    .skills-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      margin-bottom: 80px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .skills-intro {
+      font-size: 0.9rem;
+      color: var(--white-2);
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .skills-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-top: 1px solid var(--line);
+    }
+
+    .skills-table tr {
+      border-bottom: 1px solid var(--line);
+      transition: background var(--t);
+    }
+
+    .skills-table tr:hover { background: var(--line-2); }
+
+    .skills-table td {
+      padding: 22px 0;
+      vertical-align: middle;
+    }
+
+    .skill-td-num {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      width: 60px;
+    }
+
+    .skill-td-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .skill-td-cat {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 40px;
+    }
+
+    .skill-td-level {
+      text-align: right;
+      width: 180px;
+    }
+
+    .skill-track {
+      height: 1px;
+      background: var(--muted-2);
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .skill-fill {
+      position: absolute;
+      top: 0; left: 0; height: 100%;
+      background: var(--petrol-light);
+      width: 0;
+      transition: width 1.2s var(--ease);
+    }
+
+    tr.in-view .skill-fill { width: var(--fill); }
+
+    .skill-pct {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* =============================================
+       PROJECTS
+    ============================================= */
+    #projects { background: var(--bg-2); }
+
+    .projects-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 80px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .projects-count {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* Exhibition card */
+    .project-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 280px;
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--t);
+      align-items: start;
+    }
+
+    .project-row:first-of-type { border-top: 1px solid var(--line); }
+
+    .project-row:hover { background: rgba(61, 107, 90, 0.04); }
+
+    .project-row:hover .project-arrow { transform: translateX(4px); color: var(--petrol-light); }
+
+    .proj-num-col {
+      padding: 40px 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .proj-num {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .proj-main-col {
+      padding: 40px 48px;
+      border-right: 1px solid var(--line);
+    }
+
+    .proj-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .proj-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .proj-badge {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--petrol-light);
+      border: 1px solid var(--petrol-line);
+      padding: 4px 10px;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    .proj-desc {
+      font-size: 0.88rem;
+      color: var(--white-2);
+      font-weight: 300;
+      line-height: 1.75;
+      margin-bottom: 24px;
+      max-width: 540px;
+    }
+
+    .proj-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .proj-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 5px 12px;
+    }
+
+    .proj-link-col {
+      padding: 40px 0 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .project-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color var(--t);
+    }
+
+    .project-arrow {
+      transition: transform var(--t), color var(--t);
+    }
+
+    .project-link:hover { color: var(--white); }
+
+    /* =============================================
+       CONTACT
+    ============================================= */
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 40px;
+    }
+
+    .contact-headline em {
+      font-style: normal;
+      color: var(--petrol-light);
+    }
+
+    .contact-email-link {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--white-2);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+      margin-bottom: 48px;
+      transition: color var(--t), border-color var(--t);
+    }
+
+    .contact-email-link:hover {
+      color: var(--white);
+      border-color: var(--petrol);
+    }
+
+    .social-grid {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--line);
+    }
+
+    .social-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      transition: padding-left var(--t);
+    }
+
+    .social-row:hover { padding-left: 8px; }
+
+    .social-name {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white-2);
+      transition: color var(--t);
+    }
+
+    .social-row:hover .social-name { color: var(--petrol-light); }
+
+    .social-handle {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+    }
+
+    .contact-right {
+      padding-top: 80px;
+    }
+
+    /* Exhibition info block */
+    .info-block {
+      border: 1px solid var(--line);
+      padding: 40px;
+      position: relative;
+    }
+
+    .info-block::before {
+      content: 'INFO';
+      position: absolute;
+      top: -1px; left: 40px;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      background: var(--bg);
+      padding: 0 8px;
+      color: var(--muted);
+      transform: translateY(-50%);
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .info-item:last-child { border-bottom: none; }
+
+    .info-key {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .info-val {
+      font-size: 0.85rem;
+      color: var(--white-2);
+      font-family: var(--font-mono);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--line);
+      padding: 32px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .footer-mark {
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      color: var(--muted-2);
+    }
+
+    .footer-back {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color var(--t);
+    }
+
+    .footer-back:hover { color: var(--petrol-light); }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    @keyframes lineGrow {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 900px) {
+      .container { padding: 0 28px; }
+      .nav-links, .nav-status { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .hero-meta { grid-template-columns: 1fr 1fr; }
+      .meta-cell:nth-child(3) { border-right: none; grid-column: span 2; }
+
+      .about-grid,
+      .skills-header,
+      .contact-grid { grid-template-columns: 1fr; gap: 60px; }
+
+      .project-row { grid-template-columns: 48px 1fr; }
+      .proj-link-col { display: none; }
+      .proj-main-col { border-right: none; }
+
+      .projects-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+
+      .hero-scroll-line { display: none; }
+
+      .skills-table .skill-td-cat { display: none; }
+
+      .footer-mark { display: none; }
+    }
+
+    @media (max-width: 580px) {
+      .section { padding: 80px 0; }
+      .hero-meta { grid-template-columns: 1fr; border-top: none; }
+      .meta-cell { border-right: none; border-top: 1px solid var(--line); padding: 20px 0; }
+      .meta-cell:nth-child(3) { grid-column: span 1; }
+      .hero-cta-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Merhaba, ben Barış</h1>
+
+  <!-- =============================================
+       NAVBAR
+  ============================================= -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <span class="nav-logo">BD<em>.</em></span>
+      <ul class="nav-links">
+        <li><a href="#about">Hakkımda</a></li>
+        <li><a href="#skills">Yetenekler</a></li>
+        <li><a href="#projects">Projeler</a></li>
+        <li><a href="#contact">İletişim</a></li>
+      </ul>
+      <span class="nav-status">Müsait</span>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menü" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav-mobile" id="mobileNav" aria-hidden="true">
+    <a href="#about"    class="mobile-link">Hakkımda</a>
+    <a href="#skills"   class="mobile-link">Yetenekler</a>
+    <a href="#projects" class="mobile-link">Projeler</a>
+    <a href="#contact"  class="mobile-link">İletişim</a>
+  </div>
+
+  <main>
+
+    <!-- =============================================
+         HERO
+    ============================================= -->
+    <section id="hero">
+      <div class="container hero-body">
+        <div class="hero-index">001 — Portfolyo</div>
+
+        <h1 class="hero-name">
+          Barış<br>
+          <span class="surname">Derelioglu</span>
+        </h1>
+
+        <div class="hero-meta">
+          <div class="meta-cell">
+            <span class="meta-label">Uzmanlık</span>
+            <!-- PLACEHOLDER -->
+            <span class="meta-value">[Alan — örn. Yazılım Geliştirme]</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">Konum</span>
+            <!-- PLACEHOLDER -->
+            <span class="meta-value">[Şehir, Türkiye]</span>
+          </div>
+          <div class="meta-cell">
+            <span class="meta-label">Durum</span>
+            <span class="meta-value accent">Müsait — 2025</span>
+          </div>
+        </div>
+
+        <div class="hero-cta-row">
+          <a href="#projects" class="btn btn-primary">
+            Projelere Bak
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#contact" class="btn btn-ghost">İletişime Geç</a>
+        </div>
+      </div>
+
+      <div class="hero-scroll-line" aria-hidden="true">
+        Scroll
+      </div>
+    </section>
+
+    <!-- =============================================
+         ABOUT
+    ============================================= -->
+    <section id="about" class="section">
+      <div class="container">
+        <div class="about-grid">
+
+          <div class="about-body reveal">
+            <div class="section-eyebrow">
+              <span class="eyebrow-num">001</span>
+              <span class="eyebrow-line"></span>
+              <span class="eyebrow-label">Hakkımda</span>
+            </div>
+            <h2 class="section-heading">Kısa<br>Biyografi</h2>
+            <p>
+              <!-- PLACEHOLDER: İlk paragraf -->
+              [Kim olduğunuzu, ne yaptığınızı ve neye tutkuyla bağlı olduğunuzu buraya yazın.]
+            </p>
+            <p>
+              <!-- PLACEHOLDER: İkinci paragraf -->
+              [Deneyimlerinizden, çalışma biçiminizden veya hedeflerinizden bahsedebilirsiniz.]
+            </p>
+            <a href="#" class="btn btn-ghost" style="margin-top:8px">
+              CV — PDF
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </a>
+            <div class="about-tags">
+              <!-- PLACEHOLDER: İlgi alanlarınızı buraya ekleyin -->
+              <span class="about-tag">Ekonomi</span>
+              <span class="about-tag">Yazılım</span>
+              <span class="about-tag">Sistem Tasarımı</span>
+              <span class="about-tag">Veri</span>
+              <span class="about-tag">Optimizasyon</span>
+            </div>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.12s">
+            <div class="about-visual">
+              <div class="photo-frame">
+                <!-- PLACEHOLDER: <img src="foto.jpg" alt="Barış Derelioglu" style="width:100%;height:100%;object-fit:cover"> -->
+                <div class="photo-graphic">
+                  <!-- Abstract economy/software SVG illustration -->
+                  <svg viewBox="0 0 400 530" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="400" height="530" fill="#1c1d1e"/>
+                    <!-- Grid lines -->
+                    <line x1="0" y1="66" x2="400" y2="66" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="132" x2="400" y2="132" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="198" x2="400" y2="198" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="264" x2="400" y2="264" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="330" x2="400" y2="330" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="396" x2="400" y2="396" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="0" y1="462" x2="400" y2="462" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="80" y1="0" x2="80" y2="530" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="160" y1="0" x2="160" y2="530" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="240" y1="0" x2="240" y2="530" stroke="#2e3032" stroke-width="0.5"/>
+                    <line x1="320" y1="0" x2="320" y2="530" stroke="#2e3032" stroke-width="0.5"/>
+                    <!-- Economy chart / data curve -->
+                    <polyline points="40,420 80,380 120,400 160,320 200,340 240,240 280,200 320,160 360,120" stroke="#3d6b5a" stroke-width="1.5" fill="none"/>
+                    <polygon points="40,420 80,380 120,400 160,320 200,340 240,240 280,200 320,160 360,120 360,530 40,530" fill="#3d6b5a" opacity="0.07"/>
+                    <!-- Data points -->
+                    <rect x="38" y="418" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="78" y="378" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="118" y="398" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="158" y="318" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="198" y="338" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="238" y="238" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="278" y="198" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="318" y="158" width="4" height="4" fill="#4e8a72"/>
+                    <rect x="358" y="118" width="4" height="4" fill="#4e8a72"/>
+                    <!-- Code blocks -->
+                    <rect x="40" y="52" width="120" height="8" fill="#2e3032" rx="0"/>
+                    <rect x="40" y="68" width="80" height="8" fill="#2e3032" rx="0"/>
+                    <rect x="40" y="84" width="100" height="8" fill="#3d6b5a" opacity="0.5" rx="0"/>
+                    <rect x="40" y="100" width="60" height="8" fill="#2e3032" rx="0"/>
+                    <rect x="40" y="116" width="140" height="8" fill="#2e3032" rx="0"/>
+                    <!-- Terminal lines -->
+                    <rect x="200" y="52" width="160" height="100" fill="#222324" rx="0"/>
+                    <rect x="212" y="68" width="6" height="6" fill="#3d6b5a" rx="0"/>
+                    <rect x="224" y="68" width="80" height="6" fill="#2e3032" rx="0"/>
+                    <rect x="212" y="84" width="100" height="6" fill="#2e3032" rx="0"/>
+                    <rect x="212" y="100" width="60" height="6" fill="#3d6b5a" opacity="0.6" rx="0"/>
+                    <rect x="212" y="116" width="120" height="6" fill="#2e3032" rx="0"/>
+                    <rect x="212" y="132" width="40" height="6" fill="#4e8a72" opacity="0.8" rx="0"/>
+                    <!-- Large numbers (exhibition) -->
+                    <text x="40" y="230" font-family="Helvetica" font-size="72" font-weight="700" fill="#2e3032" letter-spacing="-3">042</text>
+                    <text x="40" y="248" font-family="Helvetica" font-size="9" fill="#3d6b5a" letter-spacing="3" text-transform="uppercase">PROJELER</text>
+                    <!-- Divider lines -->
+                    <line x1="40" y1="260" x2="200" y2="260" stroke="#3d6b5a" stroke-width="0.8"/>
+                  </svg>
+                </div>
+                <div class="corner-mark tl"></div>
+                <div class="corner-mark tr"></div>
+                <div class="corner-mark bl"></div>
+                <div class="corner-mark br"></div>
+                <div class="frame-label">
+                  <div class="frame-label-title">Fotoğraf Alanı</div>
+                  <!-- PLACEHOLDER: foto.jpg yüklendiğinde bu label kaldırılabilir -->
+                  <div class="frame-label-value">photo.jpg — 3:4</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-numbers reveal" style="transition-delay:0.2s">
+              <div class="about-num-cell">
+                <div class="num-big">—</div>
+                <div class="num-label">Yıl Deneyim</div>
+              </div>
+              <div class="about-num-cell">
+                <div class="num-big">—</div>
+                <div class="num-label">Proje</div>
+              </div>
+              <div class="about-num-cell">
+                <div class="num-big">—</div>
+                <div class="num-label">Teknoloji</div>
+              </div>
+              <div class="about-num-cell">
+                <div class="num-big">—</div>
+                <div class="num-label">Müşteri</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================
+         SKILLS
+    ============================================= -->
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="skills-header reveal">
+          <div>
+            <div class="section-eyebrow">
+              <span class="eyebrow-num">002</span>
+              <span class="eyebrow-line"></span>
+              <span class="eyebrow-label">Yetenekler</span>
+            </div>
+            <h2 class="section-heading">Teknik<br>Yetkinlikler</h2>
+          </div>
+          <p class="skills-intro">
+            <!-- PLACEHOLDER: Yetenekler açıklaması -->
+            [Çalışma alanlarınızı ve yaklaşımınızı özetleyen 2-3 cümle. Hangi teknolojilere hakim olduğunuzu, hangi alanlarda uzmanlaştığınızı belirtebilirsiniz.]
+          </p>
+        </div>
+
+        <table class="skills-table reveal" style="transition-delay:0.1s">
+          <!-- PLACEHOLDER: Kendi becerilerinizi ve değerlerinizi ekleyin -->
+          <tr style="--fill:90%">
+            <td class="skill-td-num">01</td>
+            <td class="skill-td-name">Beceri Adı 1</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">90%</div>
+            </td>
+          </tr>
+          <tr style="--fill:85%">
+            <td class="skill-td-num">02</td>
+            <td class="skill-td-name">Beceri Adı 2</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">85%</div>
+            </td>
+          </tr>
+          <tr style="--fill:80%">
+            <td class="skill-td-num">03</td>
+            <td class="skill-td-name">Beceri Adı 3</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">80%</div>
+            </td>
+          </tr>
+          <tr style="--fill:75%">
+            <td class="skill-td-num">04</td>
+            <td class="skill-td-name">Beceri Adı 4</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">75%</div>
+            </td>
+          </tr>
+          <tr style="--fill:70%">
+            <td class="skill-td-num">05</td>
+            <td class="skill-td-name">Beceri Adı 5</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">70%</div>
+            </td>
+          </tr>
+          <tr style="--fill:65%">
+            <td class="skill-td-num">06</td>
+            <td class="skill-td-name">Beceri Adı 6</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">65%</div>
+            </td>
+          </tr>
+          <tr style="--fill:85%">
+            <td class="skill-td-num">07</td>
+            <td class="skill-td-name">Beceri Adı 7</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">85%</div>
+            </td>
+          </tr>
+          <tr style="--fill:60%">
+            <td class="skill-td-num">08</td>
+            <td class="skill-td-name">Beceri Adı 8</td>
+            <td class="skill-td-cat">Kategori</td>
+            <td class="skill-td-level">
+              <div class="skill-track"><div class="skill-fill"></div></div>
+              <div class="skill-pct">60%</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- =============================================
+         PROJECTS
+    ============================================= -->
+    <section id="projects" class="section">
+      <div class="container">
+
+        <div class="projects-header reveal">
+          <div>
+            <div class="section-eyebrow">
+              <span class="eyebrow-num">003</span>
+              <span class="eyebrow-line"></span>
+              <span class="eyebrow-label">Projeler</span>
+            </div>
+            <h2 class="section-heading">Öne Çıkan<br>Çalışmalar</h2>
+          </div>
+          <!-- PLACEHOLDER: Toplam proje sayısı -->
+          <div>
+            <div class="projects-count">Toplam çalışma</div>
+            <div style="font-size:2.4rem;font-weight:700;letter-spacing:-0.04em;color:var(--petrol-light)">—</div>
+          </div>
+        </div>
+
+        <!-- PROJE 1 -->
+        <div class="project-row reveal">
+          <div class="proj-num-col">
+            <span class="proj-num">001</span>
+          </div>
+          <div class="proj-main-col">
+            <div class="proj-title-row">
+              <h3 class="proj-title">Proje Adı 1</h3>
+              <span class="proj-badge">Öne Çıkan</span>
+            </div>
+            <p class="proj-desc">
+              <!-- PLACEHOLDER -->
+              [Projenin açıklaması. Ne yaptığını, hangi sorunu çözdüğünü ve nasıl bir yaklaşım izlendiğini yazın.]
+            </p>
+            <div class="proj-tags">
+              <span class="proj-tag">Teknoloji 1</span>
+              <span class="proj-tag">Teknoloji 2</span>
+              <span class="proj-tag">Teknoloji 3</span>
+            </div>
+          </div>
+          <div class="proj-link-col">
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              GitHub
+            </a>
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              Canlı Demo
+            </a>
+          </div>
+        </div>
+
+        <!-- PROJE 2 -->
+        <div class="project-row reveal" style="transition-delay:0.1s">
+          <div class="proj-num-col">
+            <span class="proj-num">002</span>
+          </div>
+          <div class="proj-main-col">
+            <div class="proj-title-row">
+              <h3 class="proj-title">Proje Adı 2</h3>
+            </div>
+            <p class="proj-desc">
+              [Projenin açıklaması. Ne yaptığını, hangi sorunu çözdüğünü yazın.]
+            </p>
+            <div class="proj-tags">
+              <span class="proj-tag">Teknoloji 1</span>
+              <span class="proj-tag">Teknoloji 2</span>
+            </div>
+          </div>
+          <div class="proj-link-col">
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              GitHub
+            </a>
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              Canlı Demo
+            </a>
+          </div>
+        </div>
+
+        <!-- PROJE 3 -->
+        <div class="project-row reveal" style="transition-delay:0.2s">
+          <div class="proj-num-col">
+            <span class="proj-num">003</span>
+          </div>
+          <div class="proj-main-col">
+            <div class="proj-title-row">
+              <h3 class="proj-title">Proje Adı 3</h3>
+            </div>
+            <p class="proj-desc">
+              [Projenin açıklaması. Ne yaptığını, hangi sorunu çözdüğünü yazın.]
+            </p>
+            <div class="proj-tags">
+              <span class="proj-tag">Teknoloji 1</span>
+              <span class="proj-tag">Teknoloji 2</span>
+              <span class="proj-tag">Teknoloji 3</span>
+            </div>
+          </div>
+          <div class="proj-link-col">
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              GitHub
+            </a>
+            <a href="#" class="project-link">
+              <svg class="project-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              Canlı Demo
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================
+         CONTACT
+    ============================================= -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-grid">
+
+          <div class="contact-left reveal">
+            <div class="section-eyebrow">
+              <span class="eyebrow-num">004</span>
+              <span class="eyebrow-line"></span>
+              <span class="eyebrow-label">İletişim</span>
+            </div>
+            <h2 class="contact-headline">
+              Birlikte<br>
+              <em>Çalışalım</em>
+            </h2>
+            <!-- PLACEHOLDER: E-posta adresinizi buraya yazın -->
+            <a href="mailto:ornek@email.com" class="contact-email-link">
+              ornek@email.com
+            </a>
+
+            <div class="social-grid">
+              <!-- PLACEHOLDER: Sosyal medya URL'lerinizi buraya girin -->
+              <a href="#" class="social-row">
+                <span class="social-name">LinkedIn</span>
+                <span class="social-handle">@kullanici-adi</span>
+              </a>
+              <a href="#" class="social-row">
+                <span class="social-name">GitHub</span>
+                <span class="social-handle">@kullanici-adi</span>
+              </a>
+              <a href="#" class="social-row">
+                <span class="social-name">Twitter / X</span>
+                <span class="social-handle">@kullanici-adi</span>
+              </a>
+              <a href="#" class="social-row">
+                <span class="social-name">Instagram</span>
+                <span class="social-handle">@kullanici-adi</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="contact-right reveal" style="transition-delay:0.12s">
+            <div class="info-block">
+              <!-- PLACEHOLDER: Kişisel bilgilerinizi buraya doldurun -->
+              <div class="info-item">
+                <span class="info-key">Konum</span>
+                <span class="info-val">[Şehir, TR]</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">Uzmanlık</span>
+                <span class="info-val">[Alan]</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">Müsaitlik</span>
+                <span class="info-val" style="color:var(--petrol-light)">Açık</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">Tercih</span>
+                <span class="info-val">[Uzaktan / Hibrit]</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">Yanıt Süresi</span>
+                <span class="info-val">24h</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <div class="container footer-inner">
+      <span class="footer-copy">&copy; <span id="year"></span> Barış Derelioglu</span>
+      <span class="footer-mark">BD — v1.0</span>
+      <a href="#hero" class="footer-back">
+        Başa Dön
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    /* ---- Year ---- */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ---- Navbar scroll ---- */
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    /* ---- Mobile menu ---- */
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      mobileNav.classList.toggle('open', open);
+      mobileNav.setAttribute('aria-hidden', String(!open));
+      hamburger.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => toggleMenu(!hamburger.classList.contains('open')));
+    mobileLinks.forEach(l => l.addEventListener('click', () => toggleMenu(false)));
+
+    /* ---- Scroll reveal ---- */
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    /* ---- Skill bar animation ---- */
+    const skillObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          skillObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.skills-table tr').forEach(r => skillObs.observe(r));
+  </script>
+
 </body>
 </html>
